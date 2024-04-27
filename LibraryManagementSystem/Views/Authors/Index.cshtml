@@ -1,0 +1,56 @@
+﻿@using LibraryManagementSystem.Models.DBModel
+@model IEnumerable<Authors>
+
+@{
+    ViewData["Title"] = "Author List";
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Author List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Authors" asp-action="CreateUpdateAuthor" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> &nbsp;Add Author
+            </a>
+        </div>
+    </div>
+    <br />
+
+<table class="table table-bordered table-table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <td>
+                Author Name
+            </td>
+            <td>
+                Author Bio
+            </td>
+            <td>
+                Action
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var author in Model)
+            {
+                    <tr>
+                        <td width="50%">
+                        @author.AuthorName
+                        </td>
+                        <td width="30%">
+                        @author.AuthorBio
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                            <a asp-controller="Authors" asp-action="Edit" asp-route-id="@author.AuthorID" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
+                            <a asp-controller="Authors" asp-action="Delete" asp-route-id="@author.AuthorID" class="btn btn-danger mx-2"> <i class="bi bi-trash"></i>Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+            }
+    </tbody>
+</table>
+
+</div>
