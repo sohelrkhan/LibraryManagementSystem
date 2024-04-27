@@ -21,8 +21,4 @@
     <ProjectReference Include="..\LibraryManagementSystem.Repository\LibraryManagementSystem.Repository.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\" />
-  </ItemGroup>
-
 </Project>
