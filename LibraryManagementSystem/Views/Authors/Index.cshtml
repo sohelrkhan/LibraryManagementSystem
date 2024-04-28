@@ -44,8 +44,8 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group">
-                            <a asp-controller="Authors" asp-action="Edit" asp-route-id="@author.AuthorID" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
-                            <a asp-controller="Authors" asp-action="Delete" asp-route-id="@author.AuthorID" class="btn btn-danger mx-2"> <i class="bi bi-trash"></i>Delete</a>
+                            <a asp-controller="Authors" asp-action="CreateUpdateAuthor" asp-route-authorId="@author.AuthorID" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
+                            <a onclick="DeleteAuthor('@author.AuthorID')" class="btn btn-danger mx-2"> <i class="bi bi-trash"></i>Delete</a>
                             </div>
                         </td>
                     </tr>
@@ -54,3 +54,30 @@
 </table>
 
 </div>
+
+<script type="text/javascript">
+
+    function DeleteAuthor(authorId) {
+        $.ajax({
+            type: "POST",
+            url: "/Authors/DeleteAuthor",
+            data: { 'authorId': authorId },
+            success: function (response) {
+                if (response.output === "Success") {
+                    alert(response.message);
+                    window.location.href = "/Authors/Index";
+                    return false;
+                }
+                else {
+                    alert(response.message);
+                    return false;
+                }
+            },
+            error: function (respose) {
+                alert(response.message);
+                return false;
+            },
+        });
+    }
+
+</script>

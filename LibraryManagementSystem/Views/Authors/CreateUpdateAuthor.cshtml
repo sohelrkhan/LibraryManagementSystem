@@ -3,7 +3,7 @@
 
 @{
     ViewData["Title"] = "Create Update Author";
-    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="col-md-12 pt-3">
@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="authorBio">Author Bio <label style="color: red; font-weight: bold;">*</label></label>
+                            <label for="authorBio">Author Bio </label>
                             <textarea id="authorBio" name="authorBio" placeholder="Author Bio" type="text" class="form-control" rows="3">@Model.AuthorBio</textarea>
                         </div>
 
@@ -73,20 +73,25 @@
 
             var model = JSON.stringify(createAuthor);
 
-            Loading(true);
-
             $.ajax({
                 type: "POST",
                 url: "/Authors/CreateUpdateAuthor",
                 data: model,
                 dataType: "json",
                 contentType: "application/json",
-                success: function (respose) {
-                    Loading(false);
-                    window.location.href = "/Authors/Index";
+                success: function (response) {
+                    if (response.output === "Success") {
+                        alert(response.message);
+                        window.location.href = "/Authors/Index";
+                        return false;
+                    }
+                    else {
+                        alert(response.message);
+                        return false;
+                    }
                 },
                 error: function (respose) {
-                    swal("Oops!", respose.msg, "error");
+                    alert(response.message);
                     return false;
                 },
             });
@@ -98,6 +103,7 @@
         $('#authorBio').val("");
         $("#createUpdateAuthorForm").validate().resetForm();
     }
+
     function backToList() {
         window.location = "/Authors/Index";
     }
