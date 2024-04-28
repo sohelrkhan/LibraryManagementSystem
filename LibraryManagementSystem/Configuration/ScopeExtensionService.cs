@@ -8,6 +8,7 @@ namespace LibraryManagementSystem.Configuration
         public static void ConfigureScopeExtension(this IServiceCollection services)
         {
             services.AddScoped<IAuthors, AuthorsRepository>();
+            services.AddScoped<IBooks, BooksRepository>();
         }
     }
 }
