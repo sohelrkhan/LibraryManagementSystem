@@ -11,7 +11,7 @@
             <h2 class="text-primary">Author List</h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="Authors" asp-action="CreateUpdateAuthor" class="btn btn-primary">
+            <a onclick="CreateAuthor()" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> &nbsp;Add Author
             </a>
         </div>
@@ -44,7 +44,7 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group">
-                            <a asp-controller="Authors" asp-action="CreateUpdateAuthor" asp-route-authorId="@author.AuthorID" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
+                            <a onclick="CreateUpdateAuthor('@author.AuthorID')" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
                             <a onclick="DeleteAuthor('@author.AuthorID')" class="btn btn-danger mx-2"> <i class="bi bi-trash"></i>Delete</a>
                             </div>
                         </td>
@@ -56,6 +56,14 @@
 </div>
 
 <script type="text/javascript">
+
+    function CreateAuthor() {
+        window.location.href = "/Authors/CreateUpdateAuthor";
+    }
+
+    function CreateUpdateAuthor(authorId) {
+        window.location.href = "/Authors/CreateUpdateAuthor?authorId=" + authorId;
+    }
 
     function DeleteAuthor(authorId) {
         $.ajax({
