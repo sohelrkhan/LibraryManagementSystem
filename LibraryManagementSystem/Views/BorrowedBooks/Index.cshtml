@@ -1,0 +1,109 @@
+﻿@using LibraryManagementSystem.Models.ViewModel
+@model IEnumerable<BorrowedBooksViewModel>
+
+@{
+    ViewData["Title"] = "Borrowed Book List";
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Borrowed Book List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a onclick="CreateBorrowedBook()" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> &nbsp;Add Borrowed Book
+            </a>
+        </div>
+    </div>
+    <br />
+
+    <table class="table table-bordered table-table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <td>
+                    Member Name
+                </td>
+                <td>
+                    Book Title
+                </td>
+                <td>
+                    Borrow Date
+                </td>
+                <td>
+                    Return Date
+                </td>
+                <td>
+                    Status
+                </td>
+                <td>
+                    Action
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var borrowedBook in Model)
+            {
+                <tr>
+                    <td width="20%">
+                        @borrowedBook.MemberName
+                    </td>
+                    <td width="20%">
+                        @borrowedBook.BookTitle
+                    </td>
+                    <td width="20%">
+                        @borrowedBook.BorrowDateString
+                    </td>
+                    <td width="20%">
+                        @borrowedBook.ReturnDateString
+                    </td>
+                    <td width="30%">
+                        @borrowedBook.Status
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a onclick="CreateUpdateBorrowedBook('@borrowedBook.BorrowID')" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i>Edit</a>
+                            <a onclick="DeleteBorrowedBook('@borrowedBook.BorrowID')" class="btn btn-danger mx-2"> <i class="bi bi-trash"></i>Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<script type="text/javascript">
+
+    function CreateBorrowedBook() {
+        window.location.href = "/BorrowedBooks/CreateUpdateBorrowedBook";
+    }
+
+    function CreateUpdateBorrowedBook(borrowID) {
+        window.location.href = "/BorrowedBooks/CreateUpdateBorrowedBook?borrowID=" + borrowID;
+    }
+
+    function DeleteBorrowedBook(borrowID) {
+        $.ajax({
+            type: "POST",
+            url: "/BorrowedBooks/DeleteBorrowedBook",
+            data: { 'borrowID': borrowID },
+            success: function (response) {
+                if (response.output === "Success") {
+                    alert(response.message);
+                    window.location.href = "/BorrowedBooks/Index";
+                    return false;
+                }
+                else {
+                    alert(response.message);
+                    return false;
+                }
+            },
+            error: function (respose) {
+                alert(response.message);
+                return false;
+            },
+        });
+    }
+
+</script>
