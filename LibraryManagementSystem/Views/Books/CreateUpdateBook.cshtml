@@ -1,0 +1,177 @@
+﻿@using LibraryManagementSystem.Models.ViewModel
+@model BooksViewModel
+
+@{
+    ViewData["Title"] = "Create Update Book";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-md-12 pt-3">
+    <div>
+        <form id="createUpdateForm">
+            <div class="text-left">
+                @if (Model.BookID == 0)
+                {
+                    <h3 class="">Add Book</h3>
+                }
+                else
+                {
+                    <h3 class="">Update Book</h3>
+                }
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row g-3">
+                        <input id="bookID" name="bookID" value="@Model.BookID" type="hidden" />
+
+                        <div class="col-md-6">
+                            <label for="title">Title <label style="color: red; font-weight: bold;">*</label></label>
+                            <input id="title" name="title" value="@Model.Title" placeholder="Title" type="text" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="iSBN">ISBN</label>
+                            <input id="iSBN" name="iSBN" value="@Model.ISBN" placeholder="ISBN" type="text" class="form-control" />
+                        </div>
+
+                        @if (Model.BookID == 0)
+                        {
+                            <div class="col-lg-6 col-md-6">
+                                <label for="authorID">Author</label>
+                                <select id="authorID" class="form-control" data-toggle="select">
+                                    <option value=0 selected>Select Author</option>
+                                    @foreach (var author in @ViewBag.Authors)
+                                    {
+                                        <option value=@author.AuthorID>@author.AuthorName</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-lg-6 col-md-6">
+                                <label for="authorID">Author</label>
+                                <select id="authorID" class="form-control" data-toggle="select">
+                                    <option value=0>Select Author</option>
+                                    <option value=@Model.AuthorID selected>@Model.AuthorName</option>
+                                    @foreach (var author in @ViewBag.Authors)
+                                    {
+                                        if (@author.AuthorID != @Model.AuthorID)
+                                        {
+                                            <option value=@author.AuthorID>@author.AuthorName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        }
+
+                        <div class="col-md-6">
+                            <label for="publishedDate">Published Date</label>
+                            <input id="publishedDate" name="publishedDate" value="@Model.PublishedDate" placeholder="Published Date" type="date" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="availableCopies">Available Copies</label>
+                            <input id="availableCopies" name="availableCopies" value="@Model.AvailableCopies" placeholder="Available Copies" type="number" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="totalCopies">Total Copies</label>
+                            <input id="totalCopies" name="totalCopies" value="@Model.TotalCopies" placeholder="Total Copies" type="number" class="form-control" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br />
+    <div class="text-center pb-3">
+        <button type="button" onclick="Save()" class="btn btn-primary"><i class="fa fa-save" style="font-size:13px;color:white"></i> Save</button>
+        <button type="button" onclick="ClearForm()" class="btn btn-primary"><i class="fa fa-undo" style="font-size:13px;color:white"></i> Clear</button>
+        <button type="button" onclick="BackToList()" class="btn btn-primary"><i class="fa fa-backward" style="font-size:13px;color:white"></i> Back</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+    });
+
+    function Save() {
+        $("#createUpdateForm").validate({
+            rules: {
+                title: "required",
+            },
+            messages: {
+                title: "Title is required !!",
+            },
+            errorElement: "div"
+        });
+
+        if ($("#createUpdateForm").valid()) {
+
+            var createObj = {
+                BookID: $('#bookID').val(),
+                Title: $('#title').val(),
+                ISBN: $('#iSBN').val(),
+                AuthorID: $('#authorID').val(),
+                PublishedDate: $('#publishedDate').val(),
+                AvailableCopies: $('#availableCopies').val(),
+                TotalCopies: $('#totalCopies').val()
+            };
+
+            var model = JSON.stringify(createObj);
+
+            $.ajax({
+                type: "POST",
+                url: "/Books/CreateUpdateBook",
+                data: model,
+                dataType: "json",
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.output === "Success") {
+                        alert(response.message);
+                        window.location.href = "/Books/Index";
+                        return false;
+                    }
+                    else {
+                        alert(response.message);
+                        return false;
+                    }
+                },
+                error: function (respose) {
+                    alert(response.message);
+                    return false;
+                },
+            });
+        }
+    }
+
+    function ClearForm() {
+        $('#title').val("");
+        $('#iSBN').val("");
+        $('#authorID').val("");
+        $('#publishedDate').val("");
+        $('#availableCopies').val("");
+        $('#totalCopies').val("");
+        $("#createUpdateForm").validate().resetForm();
+    }
+
+    function BackToList() {
+        window.location = "/Books/Index";
+    }
+</script>
+
+<style type="text/css">
+    .error {
+        border-color: red !important;
+        display: block;
+    }
+
+    div.error {
+        color: red;
+        display: inline;
+        float: left;
+    }
+</style>

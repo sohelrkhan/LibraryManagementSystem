@@ -1,47 +1,48 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using LibraryManagementSystem.Repository.IRepository;
+﻿using LibraryManagementSystem.Models.CommonModel;
 using LibraryManagementSystem.Models.DBModel;
-using LibraryManagementSystem.Models.CommonModel;
+using LibraryManagementSystem.Models.ViewModel;
+using LibraryManagementSystem.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystem.Controllers
 {
     [Authorize]
-    public class AuthorsController : Controller
+    public class MembersController : Controller
     {
-        private readonly IAuthors _authors;
-        public AuthorsController(IAuthors authors)
+        private readonly IMembers _members;
+        public MembersController(IMembers members)
         {
-            _authors = authors;
+            _members = members;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var result = await _authors.GetAuthorList();
+            var result = await _members.GetMemberList();
             return await Task.Run(() => View(result.Resource));
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateUpdateAuthor(int authorId)
+        public async Task<IActionResult> CreateUpdateMember(int memberId)
         {
-            Authors authors = new();
+            Members member = new();
 
-            if (authorId == 0)
+            if (memberId == 0)
             {
-                return await Task.Run(() => View(authors));
+                return await Task.Run(() => View(member));
             }
             else
             {
-                var result = await _authors.GetAuthorById(authorId);
+                var result = await _members.GetMemberById(memberId);
                 return await Task.Run(() => View(result.Resource));
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUpdateAuthor([FromBody] Authors model)
+        public async Task<IActionResult> CreateUpdateMember([FromBody] Members model)
         {
-            var result = await _authors.CreateUpdateAuthor(model);
+            var result = await _members.CreateUpdateMember(model);
 
             if (result.Success == true)
             {
@@ -54,9 +55,9 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteAuthor(int authorId)
+        public async Task<IActionResult> DeleteMember(int memberId)
         {
-            var result = await _authors.DeleteAuthor(authorId);
+            var result = await _members.DeleteMember(memberId);
 
             if (result.Success == true)
             {

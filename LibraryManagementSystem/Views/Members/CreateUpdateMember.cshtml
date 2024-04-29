@@ -1,0 +1,148 @@
+﻿@using LibraryManagementSystem.Models.DBModel
+@model Members
+
+@{
+    ViewData["Title"] = "Create Update Member";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-md-12 pt-3">
+    <div>
+        <form id="createUpdateForm">
+            <div class="text-left">
+                @if (Model.MemberID == 0)
+                {
+                    <h3 class="">Add Member</h3>
+                }
+                else
+                {
+                    <h3 class="">Update Member</h3>
+                }
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row g-3">
+                        <input id="memberID" name="memberID" value="@Model.MemberID" type="hidden" />
+
+                        <div class="col-md-6">
+                            <label for="firstName">First Name<label style="color: red; font-weight: bold;">*</label></label>
+                            <input id="firstName" name="firstName" value="@Model.FirstName" placeholder="First Name" type="text" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="lastName">Last Name<label style="color: red; font-weight: bold;">*</label></label>
+                            <input id="lastName" name="lastName" value="@Model.LastName" placeholder="Last Name" type="text" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="email">Email<label style="color: red; font-weight: bold;">*</label></label>
+                            <input id="email" name="email" value="@Model.Email" placeholder="Email" type="text" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="phoneNumber">Phone Number<label style="color: red; font-weight: bold;">*</label></label>
+                            <input id="phoneNumber" name="phoneNumber" value="@Model.PhoneNumber" placeholder="Phone Number" type="text" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="registrationDate">Registration Date</label>
+                            <input id="registrationDate" name="registrationDate" value="@Model.RegistrationDate" placeholder="Registration Date" type="date" class="form-control" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br />
+    <div class="text-center pb-3">
+        <button type="button" onclick="SaveMember()" class="btn btn-primary"><i class="fa fa-save" style="font-size:13px;color:white"></i> Save</button>
+        <button type="button" onclick="ClearForm()" class="btn btn-primary"><i class="fa fa-undo" style="font-size:13px;color:white"></i> Clear</button>
+        <button type="button" onclick="BackToList()" class="btn btn-primary"><i class="fa fa-backward" style="font-size:13px;color:white"></i> Back</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+    function SaveMember() {
+        $("#createUpdateForm").validate({
+            rules: {
+                firstName: "required",
+                lastName: "required",
+                email: "required"
+            },
+            messages: {
+                firstName: "First Name is required !!",
+                lastName: "Last Name is required !!",
+                email: "Email is required !!"
+            },
+            errorElement: "div"
+        });
+
+        if ($("#createUpdateForm").valid()) {
+
+            var createMember = {
+                MemberID: $('#memberID').val(),
+                FirstName: $('#firstName').val(),
+                LastName: $('#lastName').val(),
+                Email: $('#email').val(),
+                PhoneNumber: $('#phoneNumber').val(),
+                RegistrationDate: $('#registrationDate').val()
+            };
+
+            var model = JSON.stringify(createMember);
+
+            $.ajax({
+                type: "POST",
+                url: "/Members/CreateUpdateMember",
+                data: model,
+                dataType: "json",
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.output === "Success") {
+                        alert(response.message);
+                        window.location.href = "/Members/Index";
+                        return false;
+                    }
+                    else {
+                        alert(response.message);
+                        return false;
+                    }
+                },
+                error: function (respose) {
+                    alert(response.message);
+                    return false;
+                },
+            });
+        }
+    }
+
+    function ClearForm() {
+        $('#firstName').val("");
+        $('#lastName').val("");
+        $('#email').val("");
+        $('#phoneNumber').val("");
+        $('#registrationDate').val("");
+        $("#createUpdateForm").validate().resetForm();
+    }
+
+    function BackToList() {
+        window.location = "/Members/Index";
+    }
+</script>
+
+<style type="text/css">
+    .error {
+        border-color: red !important;
+        display: block;
+    }
+
+    div.error {
+        color: red;
+        display: inline;
+        float: left;
+    }
+</style>

@@ -41,9 +41,9 @@
     </div>
     <br />
     <div class="text-center pb-3">
-        <button type="button" onclick="saveAuthor()" class="btn btn-primary"><i class="fa fa-save" style="font-size:13px;color:white"></i> Save</button>
-        <button type="button" onclick="clearForm()" class="btn btn-primary"><i class="fa fa-undo" style="font-size:13px;color:white"></i> Clear</button>
-        <button type="button" onclick="backToList()" class="btn btn-primary"><i class="fa fa-backward" style="font-size:13px;color:white"></i> Back</button>
+        <button type="button" onclick="SaveAuthor()" class="btn btn-primary"><i class="fa fa-save" style="font-size:13px;color:white"></i> Save</button>
+        <button type="button" onclick="ClearForm()" class="btn btn-primary"><i class="fa fa-undo" style="font-size:13px;color:white"></i> Clear</button>
+        <button type="button" onclick="BackToList()" class="btn btn-primary"><i class="fa fa-backward" style="font-size:13px;color:white"></i> Back</button>
     </div>
 </div>
 
@@ -52,13 +52,13 @@
        
     });
 
-    function saveAuthor() {
+    function SaveAuthor() {
         $("#createUpdateAuthorForm").validate({
             rules: {
-                authorName: "required",
+                authorName: "required"
             },
             messages: {
-                authorName: "Author Name is required !!",
+                authorName: "Author Name is required !!"
             },
             errorElement: "div"
         });
@@ -68,7 +68,7 @@
             var createAuthor = {
                 AuthorID: $('#authorID').val(),
                 AuthorName: $('#authorName').val(),
-                AuthorBio: $('#authorBio').val(),
+                AuthorBio: $('#authorBio').val()
             };
 
             var model = JSON.stringify(createAuthor);
@@ -98,13 +98,13 @@
         }
     }
 
-    function clearForm() {
+    function ClearForm() {
         $('#authorName').val("");
         $('#authorBio').val("");
         $("#createUpdateAuthorForm").validate().resetForm();
     }
 
-    function backToList() {
+    function BackToList() {
         window.location = "/Authors/Index";
     }
 </script>

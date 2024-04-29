@@ -9,6 +9,7 @@ namespace LibraryManagementSystem.Configuration
         {
             services.AddScoped<IAuthors, AuthorsRepository>();
             services.AddScoped<IBooks, BooksRepository>();
+            services.AddScoped<IMembers, MembersRepository>();
         }
     }
 }
