@@ -144,10 +144,10 @@ namespace LibraryManagementSystem.Repository.Repository
             {
                 if (borrowID != 0)
                 {
-                    var borrowedbook = await _db.BorrowedBooks.Where(x => x.BorrowID == borrowID).FirstOrDefaultAsync();
-                    if (borrowedbook != null)
+                    var borrowedBook = await _db.BorrowedBooks.Where(x => x.BorrowID == borrowID).FirstOrDefaultAsync();
+                    if (borrowedBook != null)
                     {
-                        _db.BorrowedBooks.Remove(borrowedbook);
+                        _db.BorrowedBooks.Remove(borrowedBook);
                         await _db.SaveChangesAsync();
 
                         commonResponseModel.Success = true;

@@ -1,4 +1,5 @@
-﻿using LibraryManagementSystem.Models.DBModel;
+﻿using LibraryManagementSystem.Models.CommonModel;
+using LibraryManagementSystem.Models.DBModel;
 using LibraryManagementSystem.Models.ViewModel;
 using LibraryManagementSystem.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
@@ -52,6 +53,36 @@ namespace LibraryManagementSystem.Controllers
 
                 var result = await _borrowedBooks.GetBorrowedBookById(borrowID);
                 return await Task.Run(() => View(result.Resource));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUpdateBorrowedBook([FromBody] BorrowedBooks model)
+        {
+            var result = await _borrowedBooks.CreateUpdateBorrowedBook(model);
+
+            if (result.Success == true)
+            {
+                return Json(new Confirmation { Message = result.Message, Output = "Success", ReturnValue = null });
+            }
+            else
+            {
+                return Json(new Confirmation { Message = result.Message, Output = "Error", ReturnValue = null });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteBorrowedBook(int borrowID)
+        {
+            var result = await _borrowedBooks.DeleteBorrowedBook(borrowID);
+
+            if (result.Success == true)
+            {
+                return Json(new Confirmation { Message = result.Message, Output = "Success", ReturnValue = null });
+            }
+            else
+            {
+                return Json(new Confirmation { Message = result.Message, Output = "Error", ReturnValue = null });
             }
         }
     }

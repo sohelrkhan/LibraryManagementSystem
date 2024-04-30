@@ -1,4 +1,5 @@
-﻿@using LibraryManagementSystem.Models.ViewModel
+﻿@using LibraryManagementSystem.Models.EnumModel
+@using LibraryManagementSystem.Models.ViewModel
 @model BorrowedBooksViewModel
 
 @{
@@ -55,26 +56,74 @@
                             </div>
                         }
 
-                        @* <div class="col-md-6">
-                            <label for="title">Title <label style="color: red; font-weight: bold;">*</label></label>
-                            <input id="title" name="title" value="@Model.Title" placeholder="Title" type="text" class="form-control" />
-                        </div>
-
-                        
-                        
+                        @if (Model.BorrowID == 0)
+                        {
+                            <div class="col-lg-6 col-md-6">
+                                <label for="bookID">Book</label>
+                                <select id="bookID" class="form-control" data-toggle="select">
+                                    <option value=0 selected>Select Book</option>
+                                    @foreach (var books in @ViewBag.Books)
+                                    {
+                                        <option value=@books.BookID>@books.Title</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-lg-6 col-md-6">
+                                <label for="bookID">Book</label>
+                                <select id="bookID" class="form-control" data-toggle="select">
+                                    <option value=0>Select Book</option>
+                                    <option value=@Model.BookID selected>@Model.BookTitle</option>
+                                    @foreach (var books in @ViewBag.Books)
+                                    {
+                                        if (@books.BookID != @Model.BookID)
+                                        {
+                                            <option value=@books.BookID>@books.Title</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        }
 
                         <div class="col-md-6">
-                            <label for="publishedDate">Published Date</label>
-                            <input id="publishedDate" name="publishedDate" value="@Model.PublishedDate" placeholder="Published Date" type="date" class="form-control" />
+                            <label for="borrowDate">Borrow Date</label>
+                            <input id="borrowDate" name="borrowDate" value="@Model.BorrowDate" placeholder="Borrow Date" type="date" class="form-control" />
                         </div>
 
+
                         <div class="col-md-6">
-                            <label for="availableCopies">Available Copies</label>
-                            <input id="availableCopies" name="availableCopies" value="@Model.AvailableCopies" placeholder="Available Copies" type="number" class="form-control" />
-                        </div> *@
+                            <label for="returnDate">Return Date</label>
+                            <input id="returnDate" name="returnDate" value="@Model.ReturnDate" placeholder="Return Date" type="date" class="form-control" />
+                        </div>
 
+                        @if (Model.BorrowID == 0)
+                        {
+                            <div class="col-lg-6 col-md-6">
+                                <label for="status">Status</label>
+                                <select id="status" class="form-control" data-toggle="select">
+                                    <option value=0 selected>Select Status</option>
+                                    <option value=@BorrowStatus.Borrowed>@BorrowStatus.Borrowed</option>
+                                    <option value=@BorrowStatus.Returned>@BorrowStatus.Returned</option>
+                                    <option value=@BorrowStatus.Overdue>@BorrowStatus.Overdue</option>
+                                </select>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-lg-6 col-md-6">
+                                <label for="status">Status</label>
+                                <select id="status" class="form-control" data-toggle="select">
+                                    <option value=0>Select Status</option>
+                                    <option value=@Model.Status selected>@Model.Status</option>
+                                    <option value=@BorrowStatus.Borrowed>@BorrowStatus.Borrowed</option>
+                                    <option value=@BorrowStatus.Returned>@BorrowStatus.Returned</option>
+                                    <option value=@BorrowStatus.Overdue>@BorrowStatus.Overdue</option>
+                                </select>
+                            </div>
+                        }
                         
-
                     </div>
                 </div>
             </div>
@@ -96,10 +145,10 @@
     function Save() {
         $("#createUpdateForm").validate({
             rules: {
-                title: "required",
+                memberID: "required",
             },
             messages: {
-                title: "Title is required !!",
+                memberID: "Member is required !!",
             },
             errorElement: "div"
         });
@@ -107,27 +156,26 @@
         if ($("#createUpdateForm").valid()) {
 
             var createObj = {
+                BorrowID: $('#borrowID').val(),
+                MemberID: $('#memberID').val(),
                 BookID: $('#bookID').val(),
-                Title: $('#title').val(),
-                ISBN: $('#iSBN').val(),
-                AuthorID: $('#authorID').val(),
-                PublishedDate: $('#publishedDate').val(),
-                AvailableCopies: $('#availableCopies').val(),
-                TotalCopies: $('#totalCopies').val()
+                BorrowDate: $('#borrowDate').val(),
+                ReturnDate: $('#returnDate').val(),
+                Status: $('#status').val()
             };
 
             var model = JSON.stringify(createObj);
 
             $.ajax({
                 type: "POST",
-                url: "/Books/CreateUpdateBook",
+                url: "/BorrowedBooks/CreateUpdateBorrowedBook",
                 data: model,
                 dataType: "json",
                 contentType: "application/json",
                 success: function (response) {
                     if (response.output === "Success") {
                         alert(response.message);
-                        window.location.href = "/Books/Index";
+                        window.location.href = "/BorrowedBooks/Index";
                         return false;
                     }
                     else {
@@ -144,17 +192,17 @@
     }
 
     function ClearForm() {
-        $('#title').val("");
-        $('#iSBN').val("");
-        $('#authorID').val("");
-        $('#publishedDate').val("");
-        $('#availableCopies').val("");
-        $('#totalCopies').val("");
+        $('#borrowID').val("");
+        $('#memberID').val("");
+        $('#bookID').val("");
+        $('#borrowDate').val("");
+        $('#returnDate').val("");
+        $('#status').val("");
         $("#createUpdateForm").validate().resetForm();
     }
 
     function BackToList() {
-        window.location = "/Books/Index";
+        window.location = "/BorrowedBooks/Index";
     }
 </script>
 
